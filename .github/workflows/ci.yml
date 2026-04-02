@@ -24,6 +24,10 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      - name: Inject Mock Google Services JSON for CI
+        run: |
+          echo '{"project_info":{"project_number":"0","firebase_url":"https://mock.firebaseio.com","project_id":"mock","storage_bucket":"mock.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:0:android:0","android_client_info":{"package_name":"com.mattia.adaptivegymtracker"}},"oauth_client":[],"api_key":[{"current_key":"mock"}],"services":{"appinvite_service":{"other_platform_oauth_client":[]}}}]}' > app/google-services.json
+
       - name: Run Android Lint
         run: gradle lint
 
