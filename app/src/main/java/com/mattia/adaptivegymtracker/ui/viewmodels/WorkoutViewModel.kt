@@ -12,8 +12,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class WorkoutViewModel(
+@HiltViewModel
+class WorkoutViewModel @Inject constructor(
     private val repository: WorkoutRepository,
     private val adaptiveEngine: AdaptiveEngine
 ) : ViewModel() {

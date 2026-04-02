@@ -9,8 +9,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class UserProfileViewModel(private val repository: WorkoutRepository) : ViewModel() {
+@HiltViewModel
+class UserProfileViewModel @Inject constructor(
+    private val repository: WorkoutRepository
+) : ViewModel() {
 
     private val _onboardingComplete = MutableStateFlow(false)
     val onboardingComplete: StateFlow<Boolean> = _onboardingComplete.asStateFlow()
