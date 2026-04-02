@@ -24,16 +24,39 @@ The `AdaptiveEngine` (located in `domain/AdaptiveEngine.kt`) takes the user's re
 - **Deload / Regression:** If the user logs multiple failures on a specific set, the algorithm slightly drops the weight to encourage form recovery.
 - **Fatigue Tracking:** Based on max Rating of Perceived Exertion (RPE) > 8, if there's less than 48 hours of rest, the engine suggests a "Rest Day" instead of rotating to the next body part (Push/Pull/Legs).
 
-## Generating an APK / AAB for the Google Play Store
+## Generating an APK / AAB for the Google Play Store (Manual)
 
-When you are ready to publish:
+When you are ready to publish manually:
 1. In Android Studio, go to the top menu bar.
 2. Click **Build** -> **Generate Signed Bundle / APK...**
-3. Select **Android App Bundle (.aab)**. This is the required format for new apps on the Google Play Store.
-4. Click **Next**.
-5. Under **Key store path**, click `Create new...` and fill out the keystore details (password, alias, and certificate details). Keep this `.jks` file extremely safe, as losing it means you can never update the app again.
-6. Select the **release** build variant and click **Finish**.
-7. Once Gradle signs the app, click **locate** in the pop-up notification. The resulting `.aab` file can be directly uploaded to the Google Play Console under "Production" or "Internal Testing".
+3. Select **Android App Bundle (.aab)**.
+4. Click **Next**, create a keystore, and build the release variant.
+
+## 🤖 Continuous Integration / Continuous Deployment (GitHub Actions)
+
+The project includes a fully robust CI/CD pipeline located in `.github/workflows/ci.yml`. It ensures the code is always in a releasable state and automates versioning and builds.
+
+### Pipeline Triggers
+- **Push & Pull Requests** on `main` and `develop` branches.
+
+### Automated Steps
+1. **Quality Checks:** Runs Android Lint against your code to detect structural issues and verifies logic via unit tests.
+2. **Build Generation:** Compiles a **Debug APK** automatically so testers can download it straight from the GitHub Actions dashboard without compiling it themselves.
+3. **Production Publishing:** Compiles a production-ready **Release AAB** (Android App Bundle).
+4. **Versioning Automation:** The app's `versionCode` and `versionName` automatically increment using the `GITHUB_RUN_NUMBER`.
+
+### 🔑 Setting up Secrets for Release
+If the pipeline does not detect Keystore secrets, it will generate an *unsigned* Release AAB. To fully automate Google Play Store deployments, define the following variables in your **GitHub Repository Settings -> Secrets and Variables -> Actions**:
+- `SIGNING_KEYSTORE_BASE64`: A Base64-encoded string of your `release.keystore` file. *(Command to yield string on your local machine: `base64 release.keystore > base64.txt`)*
+- `KEYSTORE_PASSWORD`: The password for your keystore.
+- `KEY_ALIAS`: The alias for your signing key.
+- `KEY_PASSWORD`: The password for the specific signing key.
+
+### Downloading Artifacts
+1. Go to your repository on GitHub and click the **Actions** tab.
+2. Click on the latest successful workflow run.
+3. Scroll down to the **Artifacts** section at the bottom.
+4. Click on `debug-apk` or `release-aab` to download the zip file containing the compiled application.
 
 ## Optional Firebase Integration
 
